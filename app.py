@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
+from turtle import width
 from PIL import ImageTk,Image
+from matplotlib.pyplot import text
+from ttkwidgets import CheckboxTreeview
 import disciplina
 
 
@@ -37,36 +40,43 @@ def mainWindow():
     nb.add(aba5, text="Disciplinas Pendentes")
 
     f = open("grade.txt", encoding="utf8")
+    disciplinasSelecionadas = []
     grade = f.readlines()
 
     gradeLabel = Label(aba2, text="Grade Curricular: Engenharia de Controle e Automação", bd=2, font=25, borderwidth=2, relief="flat")
-    gradeLabel.pack()
+    gradeLabel.pack(pady=10)
 
-    tv = ttk.Treeview(aba2, columns=("Código", "Disciplina", "Créditos", "C.H", "Período", "Situação"), show="headings", height=500)
-    tv.tag_configure('highlight', background='lightblue')
-    tv.column("Código",  width=60, anchor=CENTER)
-    tv.column("Disciplina",  width=180, anchor=CENTER)
-    tv.column("Créditos",  width=65, anchor=CENTER)
-    tv.column("C.H",  width=40, anchor=CENTER)
-    tv.column("Período", width=60, anchor=CENTER)
-    tv.column("Situação", width=65, anchor=CENTER)
+    selectLabel = Label(aba2, text="Selecione as disciplinas em curso", bd=2, font=25, borderwidth=2, relief="flat")
+    selectLabel.pack()
+
+    def selecionarDisciplinas():
+        disciplinasSelecionadas = tv.get_checked()
+        print(disciplinasSelecionadas)
+
+    saveButton = Button(aba2, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
+    saveButton.pack(pady=5)
+    
+    tv = CheckboxTreeview(aba2, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings", "tree"), height=350)
+    tv.column("#0", width=45)
+    tv.column("Código",  width=60, anchor=CENTER, stretch=NO)
+    tv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
+    tv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
+    tv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
+    tv.column("Período", width=60, anchor=CENTER, stretch=NO)
     tv.heading("Código",  text="CÓDIGO")
     tv.heading("Disciplina", text="DISCIPLINA")
     tv.heading("Créditos",  text="CRÉDITOS")
     tv.heading("C.H",  text="C.H")   
     tv.heading("Período", text="PERÍODO")
-    tv.heading("Situação",text="SITUAÇÃO")
-    tv.pack(pady=5)
+    tv.pack()
+
 
     for materia in grade:
         values = materia.split(",")
+
         tv.insert("", "end", values=values)
 
-    def select(event):
-        curItem = tv.focus()
-        print(tv.item(curItem)["values"])
 
-    tv.bind("<<TreeviewSelect>>", select, "+")
 
 
 splash_screen.after(2000, mainWindow)
