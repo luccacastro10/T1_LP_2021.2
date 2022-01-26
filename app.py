@@ -117,6 +117,8 @@ def mainWindow():
         label["text"] = "Você possui " + str(len(tv.get_children())) + " " + status
 
 
+     # Aba 2   
+     
     saveButton = Button(aba2, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
     saveButton.pack(pady=5)
     
@@ -134,6 +136,9 @@ def mainWindow():
     curriculumTv.heading("Período", text="PERÍODO")
     curriculumTv.pack()
 
+    
+    # Aba 3
+    
     takenLabel = Label(aba3, text="Disciplinas Cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenLabel.pack(pady=10)
 
@@ -153,25 +158,33 @@ def mainWindow():
     takenNumberLabel = Label(aba3, text="Você possui " + str(len(takenTv.get_children())) + " Disciplinas em cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenNumberLabel.pack(pady=10)
 
+    
+    # Aba 4
+    
+    def CriandoArquivo_Excl():
+        arquivo_excel = Workbook
+        arquivo_excel.save("relatorio.xlsx")
+
+    label1_Btn = Button(aba4,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
+    label1_Btn.pack()
+    
     inCourseLabel = Label(aba4, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseLabel.pack(pady=10)
 
-    inCourseTv = ttk.Treeview(aba4, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings"))
+    inCourseTv = CheckboxTreeview(aba4, columns=("Código", "Disciplina"), show=("headings","tree"))
+    inCourseTv.column("#0", width=45)
     inCourseTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
     inCourseTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-    inCourseTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
-    inCourseTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-    inCourseTv.column("Período", width=60, anchor=CENTER, stretch=NO)
     inCourseTv.heading("Código",  text="CÓDIGO")
     inCourseTv.heading("Disciplina", text="DISCIPLINA")
-    inCourseTv.heading("Créditos",  text="CRÉDITOS")
-    inCourseTv.heading("C.H",  text="C.H")   
-    inCourseTv.heading("Período", text="PERÍODO")
     inCourseTv.pack()
 
     inCourseNumberLabel = Label(aba4, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseNumberLabel.pack(pady=10)
 
+    
+    # Aba 5
+    
     pendingLabel = Label(aba5, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     pendingLabel.pack(pady=10)
 
