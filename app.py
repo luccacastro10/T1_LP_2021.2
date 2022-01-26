@@ -4,6 +4,10 @@ from turtle import width
 from PIL import ImageTk,Image
 from matplotlib.pyplot import text
 from ttkwidgets import CheckboxTreeview
+from openpyxl import Workbook
+from openpyxl import load_workbook
+import openpyxl
+import pathlib
 import disciplina
 
 status = "Disciplinas Cursadas"
@@ -162,12 +166,41 @@ def mainWindow():
     # Aba 4
     
     def CriandoArquivo_Excl():
-        arquivo_excel = Workbook
-        arquivo_excel.save("relatorio.xlsx")
+        arquivo_excel = pathlib.Path("relatorio.xlsx")
+        if arquivo_excel.exists ():
+            pass
+        else:
+            arquivo_excel = Workbook()
+            sheet = arquivo_excel.active
+            sheet["A1"] = "Codigo"
+            sheet["B1"] = "Disciplina"
+            sheet["C1"] = "Créditos"
+            sheet["D1"] = "C.H"
+            sheet["E1"] = "Período"
+
+            arquivo_excel.save("relatorio.xlsx")
+        #submitExcell(arquivo_excel);
+    
+    def submitExcell (file):
+        code = code.get()
+        discipline = discipline.get()
+        cred = cred.get()
+        ch = ch.get()
+        period = period.get()
+
+        file = openpyxl.load_workbook("relatorio.xlsx")
+        sheet = file.active
+        sheet.cell(column = 1,row = sheet.max_row+1,value = code)
+        sheet.cell(column = 2,row = sheet.max_row,value = discipline)
+        sheet.cell(column = 3,row = sheet.max_row,value = cred)
+        sheet.cell(column = 4,row = sheet.max_row,value = ch)
+        sheet.cell(column = 5,row = sheet.max_row,value = period)
+
+
 
     label1_Btn = Button(aba4,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
     label1_Btn.pack()
-    
+
     inCourseLabel = Label(aba4, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseLabel.pack(pady=10)
 
