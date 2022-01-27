@@ -1,3 +1,4 @@
+from distutils import command
 from tkinter import *
 from tkinter import ttk
 from turtle import width
@@ -9,15 +10,17 @@ from openpyxl import load_workbook
 import openpyxl
 import pathlib
 import disciplina
+from datetime import datetime
 
 status = "Disciplinas Cursadas"
+_finisehPeriods = 0
 
 splash_screen = Tk()
-splash_screen.geometry("+500+250")
+splash_screen.geometry("+400+250")
 splash_screen.overrideredirect(True) #Desabilita o título da janela
 splash_screen.wm_attributes("-transparentcolor", 'grey')
 
-img = ImageTk.PhotoImage(Image.open("minerva.icon.png"))
+img = ImageTk.PhotoImage(Image.open("UFRJ.png"))
 label = Label(image=img, bg="grey")
 label.grid()
 
@@ -26,15 +29,13 @@ def mainWindow():
     splash_screen.destroy()
     menu = Tk()
     menu.title("Trabalho LP")
-    menu.geometry("500x500+450+250")
+    menu.geometry("550x500+450+250")
     menu.minsize(200,200)
-    menu.iconbitmap("minerva.icon.png")
+    menu.iconbitmap("UFRJ.ico")
 
     nb = ttk.Notebook(menu)
-    nb.place(x=0, y=0, width=500, height=500)
+    nb.place(x=0, y=0, width=550, height=500)
 
-    aba1 = Frame(nb)
-    nb.add(aba1, text="Menu")
     aba2 = Frame(nb)
     nb.add(aba2, text="Grade Curricular")
     aba3 = Frame(nb)
@@ -43,6 +44,92 @@ def mainWindow():
     nb.add(aba4, text="Disciplinas em Curso")
     aba5 = Frame(nb)
     nb.add(aba5, text="Disciplinas Pendentes")
+    aba1 = Frame(nb)
+    nb.add(aba1, text="Periodização")
+
+    currentYear = int(datetime.now().strftime('%Y'))
+    initialYear = 2000
+    periods = []
+    for i in range(currentYear-initialYear):
+        oddPeriod = str(initialYear) + ".1"
+        evenPeriod = str(initialYear) + ".2"
+        periods.append(oddPeriod)
+        periods.append(evenPeriod)
+        initialYear += 1
+
+    selectPeriodLabel = Label(aba1, text="Selecione seu período de entrada na faculdade", borderwidth=2, relief="groove")
+    selectPeriodLabel.grid(row=0, column=0, pady=10, padx=5)
+
+    def updatePeriod(finisehPeriods):
+        initialPeriod = selectPeriodSpinBox.get()
+        currentMonth = int(datetime.now().strftime('%m'))
+        if currentMonth < 7:
+            currentPeriod = str(currentYear) + ".1"
+        else:
+            currentPeriod = str(currentYear) + ".2"
+
+        if (initialPeriod.split(".")[1] == currentPeriod.split(".")[1]):
+            finisehPeriods = 2*(int(currentPeriod.split(".")[0]) - int(initialPeriod.split(".")[0]))
+        else:
+            if (initialPeriod.split(".")[1] == "1"):
+                finisehPeriods = 2*(int(currentPeriod.split(".")[0]) - int(initialPeriod.split(".")[0])) + 1
+            else:
+                finisehPeriods = 2*(int(currentPeriod.split(".")[0]) - int(initialPeriod.split(".")[0])) - 1
+
+        selectPeriodLabel["text"] = "Seu período previsto para o presente momento é " + str(finisehPeriods + 1) +"°"
+
+        generateCourseStatistics(finisehPeriods)
+
+    def generateCourseStatistics(finisehPeriods):
+        plannedDisciplines = []
+        takenDisciplines = []
+
+        for i in takenTv.get_children():
+            takenDisciplines.append(takenTv.item(i)["values"])
+
+        for i in curriculumTv.get_children():
+            if (int(curriculumTv.item(i)["values"][4]) <= finisehPeriods):
+                plannedDisciplines.append(curriculumTv.item(i)["values"])
+            
+        res = sum(x == y for x, y in zip(plannedDisciplines, takenDisciplines))
+        pendingDisciplines = str(len(plannedDisciplines) - res)
+
+        pendingDisciplinesList = [item for item in plannedDisciplines if item not in takenDisciplines]
+
+        if (len(takenTv.get_children()) == 0):
+            infoPeriodLabel["text"] = "Para obter informações sobre sua periodização ideal,\n preencha a tabela de disciplinas cursadas na aba Grade Curricular"
+        else:
+            if (int(pendingDisciplines) > 0):
+                infoPeriodLabel["text"] =  "Voce está atrasado em " + pendingDisciplines + " matérias" 
+            else:
+                infoPeriodLabel["text"] =  "Voce está de acordo com sua periodização ideal"
+        
+        pendingDisciplinesTv = ttk.Treeview(aba1, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings"))
+        pendingDisciplinesTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
+        pendingDisciplinesTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
+        pendingDisciplinesTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
+        pendingDisciplinesTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
+        pendingDisciplinesTv.column("Período", width=60, anchor=CENTER, stretch=NO)
+        pendingDisciplinesTv.heading("Código",  text="CÓDIGO")
+        pendingDisciplinesTv.heading("Disciplina", text="DISCIPLINA")
+        pendingDisciplinesTv.heading("Créditos",  text="CRÉDITOS")
+        pendingDisciplinesTv.heading("C.H",  text="C.H")   
+        pendingDisciplinesTv.heading("Período", text="PERÍODO")
+        pendingDisciplinesTv.grid(row=3, column=0, columnspan=10, pady=5, padx=5)
+
+        for i in pendingDisciplinesList:
+            pendingDisciplinesTv.insert("", "end", values=i)
+
+
+
+    selectPeriodSpinBox = Spinbox(aba1, values=periods, width=30, command= lambda:updatePeriod(_finisehPeriods))
+    selectPeriodSpinBox.grid(row=0, column=1, columnspan=3, pady=5, padx=5)
+
+    selectPeriodLabel = Label(aba1, text="", font=25)
+    selectPeriodLabel.grid(row=1, column=0, columnspan=10, pady=5, padx=5)
+
+    infoPeriodLabel = Label(aba1, text="", font=25)
+    infoPeriodLabel.grid(row=2, column=0, columnspan=10, pady=5, padx=5)
 
     f = open("grade.txt", encoding="utf8")
     selectedDisciplines = []
@@ -69,24 +156,25 @@ def mainWindow():
         currentTv = 0
         currentLabel = 0
 
-        if status == "Disciplinas Cursadas":
-            currentTv = takenTv
-            currentLabel = takenNumberLabel
+        if status == "Disciplinas Cursadas" or status == "Disciplinas Pendentes" :
             for row in takenTv.get_children():
                 takenTv.delete(row)
-            nb.select(aba3)
+            for row in pendingTv.get_children():
+                pendingTv.delete(row)
+            if status == "Disciplinas Cursadas":
+                currentTv = takenTv
+                currentLabel = takenNumberLabel
+                nb.select(aba3)
+            else:
+                currentTv = pendingTv
+                currentLabel = PendingNumberLabel
+                nb.select(aba5)
         elif status == "Disciplinas em Curso":
             currentTv = inCourseTv
             currentLabel = inCourseNumberLabel
             for row in inCourseTv.get_children():
                 inCourseTv.delete(row)
             nb.select(aba4)
-        elif status == "Disciplinas Pendentes":
-            currentTv = pendingTv
-            currentLabel = PendingNumberLabel
-            for row in pendingTv.get_children():
-                pendingTv.delete(row)
-            nb.select(aba5)
 
         checkedDisciplines = curriculumTv.get_checked()
 
@@ -121,7 +209,7 @@ def mainWindow():
         label["text"] = "Você possui " + str(len(tv.get_children())) + " " + status
 
 
-     # Aba 2   
+    # Aba 2   
      
     saveButton = Button(aba2, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
     saveButton.pack(pady=5)
@@ -199,7 +287,7 @@ def mainWindow():
 
 
     label1_Btn = Button(aba4,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
-    label1_Btn.pack()
+    label1_Btn.pack(pady=10)
 
     inCourseLabel = Label(aba4, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseLabel.pack(pady=10)
@@ -242,5 +330,8 @@ def mainWindow():
         curriculumTv.insert("", "end", values=values)
 
 
-splash_screen.after(2000, mainWindow)
+    
+
+
+splash_screen.after(3000, mainWindow)
 mainloop()
