@@ -237,7 +237,13 @@ def mainWindow():
     # Função para criar uma planilha excel
 
     def CriandoArquivo_Excl():
-        arquivo_excel = pathlib.Path("relatorio.xlsx")
+
+        nome_arquivo = entry2.get()
+        entry2.delete(0, END)
+        nome_arquivo = (nome_arquivo + '.xlsx')
+
+        arquivo_excel = pathlib.Path(nome_arquivo)
+
         if arquivo_excel.exists ():
             pass
         else:
@@ -253,7 +259,7 @@ def mainWindow():
 
             sheet.append(lista)
 
-            arquivo_excel.save("relatorio.xlsx")
+            arquivo_excel.save(nome_arquivo)
 
     # Função para adicionar dados a planilha
 
@@ -262,8 +268,13 @@ def mainWindow():
             entrada = entry.get()
             entry.delete(0, END)
 
-            file = load_workbook("relatorio.xlsx")
+            nome_arquivo = entry2.get()
+            entry2.delete(0, END)
+            nome_arquivo = (nome_arquivo + '.xlsx')            
+
+            file = load_workbook(nome_arquivo)
             sheet = file.active
+            
 
             lista=[]
             completelista=[]
@@ -277,9 +288,9 @@ def mainWindow():
             
             x=completelista.index(lista[0])
             
-            sheet.cell(column = x+1,value = entrada)
+            sheet.cell(column = x+1,row = 2,value = entrada)
 
-            file.save("relatorio.xlsx")   
+            file.save(nome_arquivo)   
 
             lblmsg['text'] = 'Informação Adicionada'
             lblmsg.pack(pady=10)
@@ -289,6 +300,11 @@ def mainWindow():
             lblmsg.pack(pady=10)      
 
     # Aba 4
+
+    lbl_entry2 = Label(aba3,text="Nome do arquivo", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_entry2.pack(pady=10)
+    entry2 = Entry(aba3,width=25)
+    entry2.pack(pady=10)
 
     label1_Btn = Button(aba3,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
     label1_Btn.pack(pady=10)
@@ -310,7 +326,7 @@ def mainWindow():
 
     lbl_entry = Label(aba3,text="Informação a ser adicionada", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_entry.pack(pady=10)
-    entry = Entry(aba3,width=10)
+    entry = Entry(aba3,width=25)
     entry.pack(pady=10)
 
     label2_Btn = Button(aba3,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
