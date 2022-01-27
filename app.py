@@ -288,7 +288,7 @@ def mainWindow():
             
             x=completelista.index(lista[0])
             
-            sheet.cell(column = x+1,row = 2,value = entrada)
+            sheet.cell(column = x+1,row = sheet.max_row+1,value = entrada)
 
             file.save(nome_arquivo)   
 
