@@ -8,10 +8,11 @@ from numpy import take
 from ttkwidgets import CheckboxTreeview
 from openpyxl import Workbook,load_workbook
 import pathlib
-import disciplina
+import classes.disciplina as disciplina
 from datetime import datetime
-from TableView import TableView
+from classes.TableView import TableView
 import matplotlib.pyplot as pyplot
+from openpyxl.utils import get_column_letter
 
 
 status = "Disciplinas Cursadas"
@@ -22,7 +23,7 @@ splash_screen.geometry("+400+250")
 splash_screen.overrideredirect(True) #Desabilita o título da janela
 splash_screen.wm_attributes("-transparentcolor", 'grey')
 
-img = ImageTk.PhotoImage(Image.open("UFRJ.png"))
+img = ImageTk.PhotoImage(Image.open("data/UFRJ.png"))
 label = Label(image=img, bg="grey")
 label.grid()
 
@@ -30,13 +31,13 @@ label.grid()
 def mainWindow():
     splash_screen.destroy()
     menu = Tk()
-    menu.title("Trabalho LP")
-    menu.geometry("750x700+450+250")
+    menu.title("Minerva Course Analytics")
+    menu.geometry("600x550+300+150")
     menu.minsize(200,200)
-    menu.iconbitmap("UFRJ.ico")
+    menu.iconbitmap("data/UFRJ.ico")
 
     nb = ttk.Notebook(menu)
-    nb.place(x=0, y=0, width=750, height=750)
+    nb.place(x=0, y=0, width=600, height=550)
 
     aba1 = Frame(nb)
     nb.add(aba1, text="Grade Curricular")
@@ -106,7 +107,7 @@ def mainWindow():
         
         pendingDisciplinesTv = TableView(aba5, False)
         pendingDisciplinesTv.setTableView()
-        pendingDisciplinesTv.grid(row=3, column=0, columnspan=10, pady=5, padx=5)
+        pendingDisciplinesTv.grid(row=3, column=0, columnspan=3, pady=5, padx=5)
 
         for i in pendingDisciplinesList:
             pendingDisciplinesTv.insert("", "end", values=i)
@@ -116,12 +117,12 @@ def mainWindow():
     selectPeriodSpinBox.grid(row=0, column=1, columnspan=3, pady=5, padx=5)
 
     selectPeriodLabel = Label(aba5, text="", font=25)
-    selectPeriodLabel.grid(row=1, column=0, columnspan=10, pady=5, padx=5)
+    selectPeriodLabel.grid(row=1, column=0, columnspan=4, pady=5, padx=5)
 
     infoPeriodLabel = Label(aba5, text="", font=25)
-    infoPeriodLabel.grid(row=2, column=0, columnspan=10, pady=5, padx=5)
+    infoPeriodLabel.grid(row=2, column=0, columnspan=4, pady=5, padx=5)
 
-    f = open("grade.txt", encoding="utf8")
+    f = open("data/grade.txt", encoding="utf8")
     selectedDisciplines = []
     grade = f.readlines()
 
@@ -275,9 +276,9 @@ def mainWindow():
             for i in inCourseTv.get_children():
                 completelista.append(inCourseTv.item(i)['values'][1])
             
-            x=completelista.index(lista[0])
+            x=completelista.index(lista[2])
             
-            sheet.cell(column = x+1,value = entrada)
+            sheet.cell(column = 4, row = sheet.max_row+1, value = entrada)
 
             file.save("relatorio.xlsx")   
 

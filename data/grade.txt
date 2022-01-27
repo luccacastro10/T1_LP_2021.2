@@ -1,0 +1,55 @@
+COE100, Introd à Eng de Controle e Aut, 2.0, 30, 1
+COS110, Algoritmos e Programação, 5.0, 90, 1
+COS230, Lógica Matemática, 5.0, 75, 1
+FIS111, Física Experimental I, 1.0, 30, 1
+FIT112, Física I - a, 4.0, 60, 1
+IQG111, Quimica EE, 4.0, 60, 1
+MAC118, Cálculo Difer e Integral I, 6.0, 90, 1
+EEG110, Desenho de Engenharia, 4.0, 75, 2
+EEL280, Circuitos Logicos, 5.0, 90, 2
+EEL670, Linguagens de Programacao, 5.0, 90, 2
+FIS121, Física Experimental II, 1.0, 30, 2
+FIT122, Física II - a, 4.0, 60, 2
+MAC128, Cálculo Diferen e Integral II, 4.0, 60, 2
+EEA212, Mecanica I, 4.0, 60, 3
+EEL356, Metodos Mat em Eng Eletronica, 4.0, 60, 3
+FIM230, Fisica III - A, 4.0, 60, 3
+FIN231, Física Experimental III, 1.0, 30, 3
+MAC238, Cálculo Diferen e Integral III, 4.0, 60, 3
+MAE125, Álgebra Linear II, 4.0, 60, 3
+COE241, Estatística e Mod. Probabilist, 4.0, 60, 4
+COE350, Sinais e Sistemas, 5.0, 75, 4
+EEE321, Circuitos Eletricos em CC, 4.0, 60, 4
+EEL580, Arquitetura de Computadores, 5.0, 75, 4
+FIM240, Física IV - a, 4.0, 60, 4
+FIN241, Física Experimental IV, 1.0, 30, 4
+COC351, Matemática Computacional, 5.0, 75, 5
+COE240, Modelagem de Sistem Dinâmicos, 5.0, 75, 5
+COM352, Processos de Fabricação, 4.0, 75, 5
+EEE322, Lab Circuitos Elétricos I, 1.0, 30, 5
+EEH210, Engenharia e Meio Ambiente, 2.0, 30, 5
+EEL338, Eletrônica I C, 4.0, 60, 5
+COE360, Controle Realimentado, 4.0, 75, 6
+COM361, Introdução à Otimização, 4.0, 75, 6
+EEL339, Lab Eletrônica I C, 1.0, 30, 6
+EEL438, Eletronica II C, 4.0, 60, 6
+EEL878, Redes de Computadores I, 4.0, 75, 6
+EQE487, Control e Instrum de Processos, 4.0, 60, 6
+COE470, Controle Avançado, 4.0, 75, 7
+COE471, Sensores e Atuadores I, 4.0, 75, 7
+COP473, Planejam de Proc e Fabric Ind, 5.0, 75, 7
+EEE643, Automação Industrial, 4.0, 60, 7
+EEL439, Lab Eletrônica II C, 1.0, 30, 7
+EEL711, Processamento de Sinais, 5.0, 75, 7
+EQE486, Planej e Avaliação de Projetos, 3.0, 45, 7
+COE480, Controle em Tempo Real, 4.0, 75, 8
+COE481, Sensores e Atuadores II, 4.0, 75, 8
+COE482, Lab de Automação e Controle, 2.0, 75, 8
+EEL855, Robotica e Automacao, 4.0, 60, 8
+EEL856, Sist.de Controle Nao Lineares, 4.0, 60, 8
+EQE026, Inst.Automacao Ind de Processo, 3.0, 60, 8
+EQE489, Engenharia de Processos, 4.0, 60, 8
+EEI312, Economia A, 4.0, 60, 9
+EEWU00, Estágio Obrigatório, 2.0, 160, 9
+EEWX00, Projeto de Graduação, 4.0, 180, 9
+EEI321, Organizacao das Industrias, 4.0, 60, 10
