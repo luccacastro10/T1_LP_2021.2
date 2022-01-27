@@ -207,10 +207,8 @@ def mainWindow():
                 completelista.append(inCourseTv.item(i)['values'][1])
             
             x=completelista.index(lista[0])
-            print(x)
-
-
-            sheet.cell(column = x+1,row = sheet.max_row+1,value = entrada)
+            
+            sheet.cell(column = x+1,value = entrada)
 
             file.save("relatorio.xlsx")   
 
@@ -219,7 +217,7 @@ def mainWindow():
 
         except:
             lblmsg['text'] = 'Não foi possivel Adicionar'
-            lblmsg.pack()    
+            lblmsg.pack()      
 
     # Aba 4
 
