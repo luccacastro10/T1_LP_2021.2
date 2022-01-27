@@ -325,35 +325,16 @@ def mainWindow():
     inCourseNumberLabel = Label(aba4, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseNumberLabel.pack()
 
-    lbl_code = Label(aba4,text="Codigo", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_code.pack()
-    entry_code = Entry(aba4,width=10)
-    entry_code.pack()
-
-    lbl_discipline = Label(aba4,text="Disciplina", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_discipline.pack()
-    entry_discipline = Entry(aba4,width=10)
-    entry_discipline.pack() 
-
- 
-    lbl_cred = Label(aba4,text="CRED", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_cred.pack()
-    entry_cred = Entry(aba4,width=10)
-    entry_cred.pack()
-    
-
-    lbl_ch = Label(aba4,text="CH", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_ch.pack()
-    entry_ch = Entry(aba4,width=10)
-    entry_ch.pack() 
-    
-    lbl_period = Label(aba4,text="PERIODO", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_period.pack()
-    entry_period = Entry(aba4,width=10)
-    entry_period.pack()
+    lbl_entry = Label(aba4,text="Informação a ser adicionada", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_entry.pack()
+    entry = Entry(aba4,width=10)
+    entry.pack()
 
     label2_Btn = Button(aba4,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
     label2_Btn.pack()
+
+    lblmsg = Label(aba4,text='', bd=2, font=25, borderwidth=2, relief="flat")
+
 
 
 
