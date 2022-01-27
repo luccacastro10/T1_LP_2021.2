@@ -4,11 +4,14 @@ from tkinter import ttk
 from turtle import width
 from PIL import ImageTk,Image
 from matplotlib.pyplot import text
+from numpy import take
 from ttkwidgets import CheckboxTreeview
 from openpyxl import Workbook,load_workbook
 import pathlib
 import disciplina
 from datetime import datetime
+from TableView import TableView
+import matplotlib.pyplot as pyplot
 
 
 status = "Disciplinas Cursadas"
@@ -35,19 +38,19 @@ def mainWindow():
     nb = ttk.Notebook(menu)
     nb.place(x=0, y=0, width=750, height=750)
 
-    aba2 = Frame(nb)
-    nb.add(aba2, text="Grade Curricular")
-    aba3 = Frame(nb)
-    nb.add(aba3, text="Disciplinas Cursadas")
-    aba4 = Frame(nb)
-    nb.add(aba4, text="Disciplinas em Curso")
-    aba5 = Frame(nb)
-    nb.add(aba5, text="Disciplinas Pendentes")
     aba1 = Frame(nb)
-    nb.add(aba1, text="Periodização")
+    nb.add(aba1, text="Grade Curricular")
+    aba2 = Frame(nb)
+    nb.add(aba2, text="Disciplinas Cursadas")
+    aba3 = Frame(nb)
+    nb.add(aba3, text="Disciplinas em Curso")
+    aba4 = Frame(nb)
+    nb.add(aba4, text="Disciplinas Pendentes")
+    aba5 = Frame(nb)
+    nb.add(aba5, text="Periodização")
 
     currentYear = int(datetime.now().strftime('%Y'))
-    initialYear = 2000
+    initialYear = 2017
     periods = []
     for i in range(currentYear-initialYear):
         oddPeriod = str(initialYear) + ".1"
@@ -56,7 +59,7 @@ def mainWindow():
         periods.append(evenPeriod)
         initialYear += 1
 
-    selectPeriodLabel = Label(aba1, text="Selecione seu período de entrada na faculdade", borderwidth=2, relief="groove")
+    selectPeriodLabel = Label(aba5, text="Selecione seu período de entrada na faculdade", borderwidth=2, relief="groove")
     selectPeriodLabel.grid(row=0, column=0, pady=10, padx=5)
 
     def updatePeriod(finisehPeriods):
@@ -101,48 +104,38 @@ def mainWindow():
             else:
                 infoPeriodLabel["text"] =  "Voce está de acordo com sua periodização ideal"
         
-        pendingDisciplinesTv = ttk.Treeview(aba1, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings"))
-        pendingDisciplinesTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
-        pendingDisciplinesTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-        pendingDisciplinesTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
-        pendingDisciplinesTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-        pendingDisciplinesTv.column("Período", width=60, anchor=CENTER, stretch=NO)
-        pendingDisciplinesTv.heading("Código",  text="CÓDIGO")
-        pendingDisciplinesTv.heading("Disciplina", text="DISCIPLINA")
-        pendingDisciplinesTv.heading("Créditos",  text="CRÉDITOS")
-        pendingDisciplinesTv.heading("C.H",  text="C.H")   
-        pendingDisciplinesTv.heading("Período", text="PERÍODO")
+        pendingDisciplinesTv = TableView(aba5, False)
+        pendingDisciplinesTv.setTableView()
         pendingDisciplinesTv.grid(row=3, column=0, columnspan=10, pady=5, padx=5)
 
         for i in pendingDisciplinesList:
             pendingDisciplinesTv.insert("", "end", values=i)
 
 
-
-    selectPeriodSpinBox = Spinbox(aba1, values=periods, width=30, command= lambda:updatePeriod(_finisehPeriods))
+    selectPeriodSpinBox = Spinbox(aba5, values=periods, width=30, command= lambda:updatePeriod(_finisehPeriods))
     selectPeriodSpinBox.grid(row=0, column=1, columnspan=3, pady=5, padx=5)
 
-    selectPeriodLabel = Label(aba1, text="", font=25)
+    selectPeriodLabel = Label(aba5, text="", font=25)
     selectPeriodLabel.grid(row=1, column=0, columnspan=10, pady=5, padx=5)
 
-    infoPeriodLabel = Label(aba1, text="", font=25)
+    infoPeriodLabel = Label(aba5, text="", font=25)
     infoPeriodLabel.grid(row=2, column=0, columnspan=10, pady=5, padx=5)
 
     f = open("grade.txt", encoding="utf8")
     selectedDisciplines = []
     grade = f.readlines()
 
-    gradeLabel = Label(aba2, text="Grade Curricular: Engenharia de Controle e Automação", bd=2, font=25, borderwidth=2, relief="flat")
+    gradeLabel = Label(aba1, text="Grade Curricular: Engenharia de Controle e Automação", bd=2, font=25, borderwidth=2, relief="flat")
     gradeLabel.pack(pady=10)
     
     def value_changed():
         status = mySpin.get()
         selectLabel["text"] = ("Selecione as " + status)
 
-    mySpin = Spinbox(aba2, values=("Disciplinas Cursadas", "Disciplinas em Curso", "Disciplinas Pendentes"), width=50, relief="groove", command=value_changed)
+    mySpin = Spinbox(aba1, values=("Disciplinas Cursadas", "Disciplinas em Curso", "Disciplinas Pendentes"), width=50, relief="groove", command=value_changed)
     mySpin.pack( padx=5)
 
-    selectLabel = Label(aba2, text= ("Selecione as " + status), bd=2, font=25, borderwidth=2, relief="flat")
+    selectLabel = Label(aba1, text= ("Selecione as " + status), bd=2, font=25, borderwidth=2, relief="flat")
     selectLabel.pack()
 
     def selecionarDisciplinas():
@@ -161,17 +154,17 @@ def mainWindow():
             if status == "Disciplinas Cursadas":
                 currentTv = takenTv
                 currentLabel = takenNumberLabel
-                nb.select(aba3)
+                nb.select(aba2)
             else:
                 currentTv = pendingTv
                 currentLabel = PendingNumberLabel
-                nb.select(aba5)
+                nb.select(aba4)
         elif status == "Disciplinas em Curso":
             currentTv = inCourseTv
             currentLabel = inCourseNumberLabel
             for row in inCourseTv.get_children():
                 inCourseTv.delete(row)
-            nb.select(aba4)
+            nb.select(aba3)
 
         checkedDisciplines = curriculumTv.get_checked()
 
@@ -203,51 +196,40 @@ def mainWindow():
 
         
     def updateDisciplineNumber(status, tv, label):
+        ch = 0
+        cred = 0
+        for i in tv.get_children():
+            ch += int(tv.item(i)["values"][3])
+            cred += float(tv.item(i)["values"][2])
+
         label["text"] = "Você possui " + str(len(tv.get_children())) + " " + status
+        label["text"] += "\n\n A carga horária totaliza "+str(ch) +" horas"
+        label["text"] += "\n\n Total de créditos: " + str(cred)
 
 
     # Aba 2   
      
 
-    saveButton = Button(aba2, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
+    saveButton = Button(aba1, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
     saveButton.pack(pady=5)
     
-    curriculumTv = CheckboxTreeview(aba2, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings", "tree"), height=15)
-    curriculumTv.column("#0", width=45)
-    curriculumTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
-    curriculumTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-    curriculumTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
-    curriculumTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-    curriculumTv.column("Período", width=60, anchor=CENTER, stretch=NO)
-    curriculumTv.heading("Código",  text="CÓDIGO")
-    curriculumTv.heading("Disciplina", text="DISCIPLINA")
-    curriculumTv.heading("Créditos",  text="CRÉDITOS")
-    curriculumTv.heading("C.H",  text="C.H")   
-    curriculumTv.heading("Período", text="PERÍODO")
+
+    curriculumTv = TableView(aba1, True)
+    curriculumTv.setTableView()
     curriculumTv.pack()
 
 
     # Aba 3
 
-    takenLabel = Label(aba3, text="Disciplinas Cursadas", bd=2, font=25, borderwidth=2, relief="flat")
+    takenLabel = Label(aba2, text="Disciplinas Cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenLabel.pack(pady=10)
 
-    takenTv = ttk.Treeview(aba3, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings"))
-    takenTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
-    takenTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-    takenTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
-    takenTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-    takenTv.column("Período", width=60, anchor=CENTER, stretch=NO)
-    takenTv.heading("Código",  text="CÓDIGO")
-    takenTv.heading("Disciplina", text="DISCIPLINA")
-    takenTv.heading("Créditos",  text="CRÉDITOS")
-    takenTv.heading("C.H",  text="C.H")   
-    takenTv.heading("Período", text="PERÍODO")
+    takenTv = TableView(aba2, False)
+    takenTv.setTableView()
     takenTv.pack()
 
-    takenNumberLabel = Label(aba3, text="Você possui " + str(len(takenTv.get_children())) + " Disciplinas em cursadas", bd=2, font=25, borderwidth=2, relief="flat")
+    takenNumberLabel = Label(aba2, text="Você possui " + str(len(takenTv.get_children())) + " Disciplinas em cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenNumberLabel.pack(pady=10)
-
 
 
     # Funçoes: Aba 4
@@ -308,13 +290,13 @@ def mainWindow():
 
     # Aba 4
 
-    label1_Btn = Button(aba4,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
+    label1_Btn = Button(aba3,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
     label1_Btn.pack(pady=10)
 
-    inCourseLabel = Label(aba4, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
+    inCourseLabel = Label(aba3, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseLabel.pack(pady=10)
 
-    inCourseTv = CheckboxTreeview(aba4, columns=("Código", "Disciplina"), show=("headings","tree"))
+    inCourseTv = CheckboxTreeview(aba3, columns=("Código", "Disciplina"), show=("headings","tree"))
     inCourseTv.column("#0", width=45)
     inCourseTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
     inCourseTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
@@ -322,66 +304,71 @@ def mainWindow():
     inCourseTv.heading("Disciplina", text="DISCIPLINA")
     inCourseTv.pack()
 
-    inCourseNumberLabel = Label(aba4, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
+    inCourseNumberLabel = Label(aba3, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseNumberLabel.pack()
 
-    lbl_code = Label(aba4,text="Codigo", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_code = Label(aba3,text="Codigo", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_code.pack()
-    entry_code = Entry(aba4,width=10)
+    entry_code = Entry(aba3,width=10)
     entry_code.pack()
 
-    lbl_discipline = Label(aba4,text="Disciplina", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_discipline = Label(aba3,text="Disciplina", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_discipline.pack()
-    entry_discipline = Entry(aba4,width=10)
+    entry_discipline = Entry(aba3,width=10)
     entry_discipline.pack() 
 
  
-    lbl_cred = Label(aba4,text="CRED", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_cred = Label(aba3,text="CRED", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_cred.pack()
-    entry_cred = Entry(aba4,width=10)
+    entry_cred = Entry(aba3,width=10)
     entry_cred.pack()
     
 
-    lbl_ch = Label(aba4,text="CH", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_ch = Label(aba3,text="CH", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_ch.pack()
-    entry_ch = Entry(aba4,width=10)
+    entry_ch = Entry(aba3,width=10)
     entry_ch.pack() 
     
-    lbl_period = Label(aba4,text="PERIODO", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_period = Label(aba3,text="PERIODO", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_period.pack()
-    entry_period = Entry(aba4,width=10)
+    entry_period = Entry(aba3,width=10)
     entry_period.pack()
 
-    label2_Btn = Button(aba4,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
+    label2_Btn = Button(aba3,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
     label2_Btn.pack()
 
 
 
     # Aba 5
 
-    pendingLabel = Label(aba5, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
+    pendingLabel = Label(aba4, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     pendingLabel.pack(pady=10)
 
-    pendingTv = ttk.Treeview(aba5, columns=("Código", "Disciplina", "Créditos", "C.H", "Período"), show=("headings"))
-    pendingTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
-    pendingTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-    pendingTv.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
-    pendingTv.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-    pendingTv.column("Período", width=60, anchor=CENTER, stretch=NO)
-    pendingTv.heading("Código",  text="CÓDIGO")
-    pendingTv.heading("Disciplina", text="DISCIPLINA")
-    pendingTv.heading("Créditos",  text="CRÉDITOS")
-    pendingTv.heading("C.H",  text="C.H")   
-    pendingTv.heading("Período", text="PERÍODO")
+    pendingTv = TableView(aba4, False)
+    pendingTv.setTableView()
     pendingTv.pack()
 
-    PendingNumberLabel = Label(aba5, text="Você possui " + str(len(pendingTv.get_children())) + " Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
+
+    PendingNumberLabel = Label(aba4, text="Você possui " + str(len(pendingTv.get_children())) + " Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     PendingNumberLabel.pack(pady=10)
 
 
     for materia in grade:
         values = materia.split(",")
         curriculumTv.insert("", "end", values=values)
+
+    def generateGraphics():
+        taken = len(takenTv.get_children())
+        pending = len(curriculumTv.get_children()) - taken
+        pyplot.axis("equal")
+        pyplot.pie((taken, pending), labels=("Concluídas", "Pendentes"), autopct='%1.1f%%')
+        pyplot.legend(("Concluídas", "Pendentes"), loc=3)
+        pyplot.title("Percentual de conclusão de curso")
+        pyplot.show()
+
+    GraphicButton = Button(aba5, text="Gerar estatística de conclusão do curso", bd=2, font=25, borderwidth=2, relief="groove", command=generateGraphics)
+    GraphicButton.grid(row=4, column=0, columnspan=10, pady=5, padx=5)
+
 
 
 splash_screen.after(3000, mainWindow)
