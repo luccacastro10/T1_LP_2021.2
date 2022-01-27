@@ -174,32 +174,41 @@ def mainWindow():
         else:
             arquivo_excel = Workbook()
             sheet = arquivo_excel.active
-            sheet["A1"] = "Codigo"
-            sheet["B1"] = "Disciplina"
-            sheet["C1"] = "Créditos"
-            sheet["D1"] = "C.H"
-            sheet["E1"] = "Período"
+
+            dados = inCourseTv.get_checked()
+            
+            # Os nomes que estao indo pro arquivo sao do tipo 'I0001',
+            # Ajeitar para os nomes corretos das disciplinas
+            sheet.append(dados)
 
             arquivo_excel.save("relatorio.xlsx")
 
     # Função para adicionar dados a planilha
 
     def submitExcell ():
-        code = entry_code.get()
-        discipline = entry_discipline.get()
-        cred = entry_cred.get()
-        ch = entry_ch.get()
-        period = entry_period.get()
+        try:
+            entrada = entry.get()
+            entry.delete(0, END)
 
-        file = load_workbook("relatorio.xlsx")
-        sheet = file.active
-        sheet.cell(column = 1,row = sheet.max_row+1,value = code)
-        sheet.cell(column = 2,row = sheet.max_row,value = discipline)
-        sheet.cell(column = 3,row = sheet.max_row,value = cred)
-        sheet.cell(column = 4,row = sheet.max_row,value = ch)
-        sheet.cell(column = 5,row = sheet.max_row,value = period)
+            file = load_workbook("relatorio.xlsx")
+            sheet = file.active
 
-        file.save("relatorio.xlsx")   
+            dado = inCourseTv.get_checked()
+            # Aqui sera marcado apenas uma das checkbox
+            # O nome da checkbox marcada deve ser usado
+            # Para selecionar a coluna a que se deseja adicionar a informação
+
+            # Da forma que esta, ele apenas adiciona a primeira coluna por causa do column = 1
+            sheet.cell(column = 1,row = sheet.max_row+1,value = entrada)
+
+            file.save("relatorio.xlsx")   
+
+            lblmsg['text'] = 'Informação Adicionada'
+            lblmsg.pack()
+
+        except:
+            lblmsg['text'] = 'Não foi possivel Adicionar'
+            lblmsg.pack()    
 
     # Aba 4
 
