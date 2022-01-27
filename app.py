@@ -175,11 +175,14 @@ def mainWindow():
             arquivo_excel = Workbook()
             sheet = arquivo_excel.active
 
+            lista=[]
+
             dados = inCourseTv.get_checked()
-            
-            # Os nomes que estao indo pro arquivo sao do tipo 'I0001',
-            # Ajeitar para os nomes corretos das disciplinas
-            sheet.append(dados)
+            for i in dados:
+                lista.append(inCourseTv.item(i)['values'][1])
+
+
+            sheet.append(lista)
 
             arquivo_excel.save("relatorio.xlsx")
 
@@ -193,13 +196,21 @@ def mainWindow():
             file = load_workbook("relatorio.xlsx")
             sheet = file.active
 
-            dado = inCourseTv.get_checked()
-            # Aqui sera marcado apenas uma das checkbox
-            # O nome da checkbox marcada deve ser usado
-            # Para selecionar a coluna a que se deseja adicionar a informação
+            lista=[]
+            completelista=[]
 
-            # Da forma que esta, ele apenas adiciona a primeira coluna por causa do column = 1
-            sheet.cell(column = 1,row = sheet.max_row+1,value = entrada)
+            dados = inCourseTv.get_checked()
+            for i in dados:
+                lista.append(inCourseTv.item(i)['values'][1])
+
+            for i in inCourseTv.get_children():
+                completelista.append(inCourseTv.item(i)['values'][1])
+            
+            x=completelista.index(lista[0])
+            print(x)
+
+
+            sheet.cell(column = x+1,row = sheet.max_row+1,value = entrada)
 
             file.save("relatorio.xlsx")   
 
