@@ -32,12 +32,12 @@ def mainWindow():
     splash_screen.destroy()
     menu = Tk()
     menu.title("Minerva Course Analytics")
-    menu.geometry("600x550+300+150")
+    menu.geometry("600x650+300+150")
     menu.minsize(200,200)
     menu.iconbitmap("data/UFRJ.ico")
 
     nb = ttk.Notebook(menu)
-    nb.place(x=0, y=0, width=600, height=550)
+    nb.place(x=0, y=0, width=600, height=650)
 
     aba1 = Frame(nb)
     nb.add(aba1, text="Grade Curricular")
@@ -287,10 +287,9 @@ def mainWindow():
             for i in inCourseTv.get_children():
                 completelista.append(inCourseTv.item(i)['values'][1])
             
-            x=completelista.index(lista[2])
-            
+            x=completelista.index(lista[0])
 
-            sheet.cell(column = x+1,row = sheet.max_row+1,value = entrada)
+            sheet.cell(column = x+1,row =sheet.max_row+1, value = entrada)
 
             file.save(nome_arquivo)   
 
