@@ -5,12 +5,11 @@ from turtle import width
 from PIL import ImageTk,Image
 from matplotlib.pyplot import text
 from ttkwidgets import CheckboxTreeview
-from openpyxl import Workbook
-from openpyxl import load_workbook
-import openpyxl
+from openpyxl import Workbook,load_workbook
 import pathlib
 import disciplina
 from datetime import datetime
+
 
 status = "Disciplinas Cursadas"
 _finisehPeriods = 0
@@ -29,12 +28,12 @@ def mainWindow():
     splash_screen.destroy()
     menu = Tk()
     menu.title("Trabalho LP")
-    menu.geometry("550x500+450+250")
+    menu.geometry("750x700+450+250")
     menu.minsize(200,200)
     menu.iconbitmap("UFRJ.ico")
 
     nb = ttk.Notebook(menu)
-    nb.place(x=0, y=0, width=550, height=500)
+    nb.place(x=0, y=0, width=750, height=750)
 
     aba2 = Frame(nb)
     nb.add(aba2, text="Grade Curricular")
@@ -90,17 +89,15 @@ def mainWindow():
         for i in curriculumTv.get_children():
             if (int(curriculumTv.item(i)["values"][4]) <= finisehPeriods):
                 plannedDisciplines.append(curriculumTv.item(i)["values"])
-            
-        res = sum(x == y for x, y in zip(plannedDisciplines, takenDisciplines))
-        pendingDisciplines = str(len(plannedDisciplines) - res)
 
         pendingDisciplinesList = [item for item in plannedDisciplines if item not in takenDisciplines]
+        pendingDisciplinesNumber = len(pendingDisciplinesList)
 
         if (len(takenTv.get_children()) == 0):
             infoPeriodLabel["text"] = "Para obter informações sobre sua periodização ideal,\n preencha a tabela de disciplinas cursadas na aba Grade Curricular"
         else:
-            if (int(pendingDisciplines) > 0):
-                infoPeriodLabel["text"] =  "Voce está atrasado em " + pendingDisciplines + " matérias" 
+            if (len(pendingDisciplinesList) > 0):
+                infoPeriodLabel["text"] =  "Voce está atrasado em " + str(pendingDisciplinesNumber) + " matérias" 
             else:
                 infoPeriodLabel["text"] =  "Voce está de acordo com sua periodização ideal"
         
@@ -211,6 +208,7 @@ def mainWindow():
 
     # Aba 2   
      
+
     saveButton = Button(aba2, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
     saveButton.pack(pady=5)
     
@@ -228,9 +226,9 @@ def mainWindow():
     curriculumTv.heading("Período", text="PERÍODO")
     curriculumTv.pack()
 
-    
+
     # Aba 3
-    
+
     takenLabel = Label(aba3, text="Disciplinas Cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenLabel.pack(pady=10)
 
@@ -250,9 +248,12 @@ def mainWindow():
     takenNumberLabel = Label(aba3, text="Você possui " + str(len(takenTv.get_children())) + " Disciplinas em cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenNumberLabel.pack(pady=10)
 
+
+
+    # Funçoes: Aba 4
     
-    # Aba 4
-    
+    # Função para criar uma planilha excel
+
     def CriandoArquivo_Excl():
         arquivo_excel = pathlib.Path("relatorio.xlsx")
         if arquivo_excel.exists ():
@@ -260,31 +261,52 @@ def mainWindow():
         else:
             arquivo_excel = Workbook()
             sheet = arquivo_excel.active
-            sheet["A1"] = "Codigo"
-            sheet["B1"] = "Disciplina"
-            sheet["C1"] = "Créditos"
-            sheet["D1"] = "C.H"
-            sheet["E1"] = "Período"
+
+            lista=[]
+
+            dados = inCourseTv.get_checked()
+            for i in dados:
+                lista.append(inCourseTv.item(i)['values'][1])
+
+
+            sheet.append(lista)
 
             arquivo_excel.save("relatorio.xlsx")
-        #submitExcell(arquivo_excel);
-    
-    def submitExcell (file):
-        code = code.get()
-        discipline = discipline.get()
-        cred = cred.get()
-        ch = ch.get()
-        period = period.get()
 
-        file = openpyxl.load_workbook("relatorio.xlsx")
-        sheet = file.active
-        sheet.cell(column = 1,row = sheet.max_row+1,value = code)
-        sheet.cell(column = 2,row = sheet.max_row,value = discipline)
-        sheet.cell(column = 3,row = sheet.max_row,value = cred)
-        sheet.cell(column = 4,row = sheet.max_row,value = ch)
-        sheet.cell(column = 5,row = sheet.max_row,value = period)
+    # Função para adicionar dados a planilha
 
+    def submitExcell ():
+        try:
+            entrada = entry.get()
+            entry.delete(0, END)
 
+            file = load_workbook("relatorio.xlsx")
+            sheet = file.active
+
+            lista=[]
+            completelista=[]
+
+            dados = inCourseTv.get_checked()
+            for i in dados:
+                lista.append(inCourseTv.item(i)['values'][1])
+
+            for i in inCourseTv.get_children():
+                completelista.append(inCourseTv.item(i)['values'][1])
+            
+            x=completelista.index(lista[0])
+            
+            sheet.cell(column = x+1,value = entrada)
+
+            file.save("relatorio.xlsx")   
+
+            lblmsg['text'] = 'Informação Adicionada'
+            lblmsg.pack()
+
+        except:
+            lblmsg['text'] = 'Não foi possivel Adicionar'
+            lblmsg.pack()      
+
+    # Aba 4
 
     label1_Btn = Button(aba4,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
     label1_Btn.pack(pady=10)
@@ -301,11 +323,42 @@ def mainWindow():
     inCourseTv.pack()
 
     inCourseNumberLabel = Label(aba4, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
-    inCourseNumberLabel.pack(pady=10)
+    inCourseNumberLabel.pack()
 
+    lbl_code = Label(aba4,text="Codigo", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_code.pack()
+    entry_code = Entry(aba4,width=10)
+    entry_code.pack()
+
+    lbl_discipline = Label(aba4,text="Disciplina", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_discipline.pack()
+    entry_discipline = Entry(aba4,width=10)
+    entry_discipline.pack() 
+
+ 
+    lbl_cred = Label(aba4,text="CRED", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_cred.pack()
+    entry_cred = Entry(aba4,width=10)
+    entry_cred.pack()
     
+
+    lbl_ch = Label(aba4,text="CH", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_ch.pack()
+    entry_ch = Entry(aba4,width=10)
+    entry_ch.pack() 
+    
+    lbl_period = Label(aba4,text="PERIODO", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_period.pack()
+    entry_period = Entry(aba4,width=10)
+    entry_period.pack()
+
+    label2_Btn = Button(aba4,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
+    label2_Btn.pack()
+
+
+
     # Aba 5
-    
+
     pendingLabel = Label(aba5, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     pendingLabel.pack(pady=10)
 
@@ -325,12 +378,10 @@ def mainWindow():
     PendingNumberLabel = Label(aba5, text="Você possui " + str(len(pendingTv.get_children())) + " Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     PendingNumberLabel.pack(pady=10)
 
+
     for materia in grade:
         values = materia.split(",")
         curriculumTv.insert("", "end", values=values)
-
-
-    
 
 
 splash_screen.after(3000, mainWindow)
