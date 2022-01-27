@@ -282,11 +282,11 @@ def mainWindow():
             file.save("relatorio.xlsx")   
 
             lblmsg['text'] = 'Informação Adicionada'
-            lblmsg.pack()
+            lblmsg.pack(pady=10)
 
         except:
             lblmsg['text'] = 'Não foi possivel Adicionar'
-            lblmsg.pack()      
+            lblmsg.pack(pady=10)      
 
     # Aba 4
 
@@ -307,35 +307,17 @@ def mainWindow():
     inCourseNumberLabel = Label(aba3, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
     inCourseNumberLabel.pack()
 
-    lbl_code = Label(aba3,text="Codigo", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_code.pack()
-    entry_code = Entry(aba3,width=10)
-    entry_code.pack()
 
-    lbl_discipline = Label(aba3,text="Disciplina", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_discipline.pack()
-    entry_discipline = Entry(aba3,width=10)
-    entry_discipline.pack() 
-
- 
-    lbl_cred = Label(aba3,text="CRED", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_cred.pack()
-    entry_cred = Entry(aba3,width=10)
-    entry_cred.pack()
-    
-
-    lbl_ch = Label(aba3,text="CH", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_ch.pack()
-    entry_ch = Entry(aba3,width=10)
-    entry_ch.pack() 
-    
-    lbl_period = Label(aba3,text="PERIODO", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_period.pack()
-    entry_period = Entry(aba3,width=10)
-    entry_period.pack()
+    lbl_entry = Label(aba3,text="Informação a ser adicionada", bd=2, font=25, borderwidth=2, relief="flat")
+    lbl_entry.pack(pady=10)
+    entry = Entry(aba3,width=10)
+    entry.pack(pady=10)
 
     label2_Btn = Button(aba3,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
     label2_Btn.pack()
+
+    lblmsg = Label(aba4,text='', bd=2, font=25, borderwidth=2, relief="flat")
+
 
 
 
