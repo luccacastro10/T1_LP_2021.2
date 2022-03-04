@@ -24,5 +24,11 @@ class TableView(CheckboxTreeview):
         self.heading("Créditos",  text="CRÉDITOS")
         self.heading("C.H",  text="C.H")   
         self.heading("Período", text="PERÍODO")
+        self["height"] = 20
+
+    def clear(self):
+        for i in self.get_children():
+            self.delete(i)
+
 
     

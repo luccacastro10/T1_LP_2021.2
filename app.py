@@ -32,8 +32,8 @@ def mainWindow():
     splash_screen.destroy()
     menu = Tk()
     menu.title("Minerva Course Analytics")
-    menu.geometry("600x650+300+150")
-    menu.minsize(200,200)
+    menu.geometry("600x650+400+50")
+    menu.resizable(False,False)
     menu.iconbitmap("data/UFRJ.ico")
 
     nb = ttk.Notebook(menu)
@@ -50,6 +50,8 @@ def mainWindow():
     aba5 = Frame(nb)
     nb.add(aba5, text="Periodização")
 
+    pendingDisciplinesTv = TableView(aba5, False)
+
     currentYear = int(datetime.now().strftime('%Y'))
     initialYear = 2017
     periods = []
@@ -61,7 +63,7 @@ def mainWindow():
         initialYear += 1
 
     selectPeriodLabel = Label(aba5, text="Selecione seu período de entrada na faculdade", borderwidth=2, relief="groove")
-    selectPeriodLabel.grid(row=0, column=0, pady=10, padx=5)
+    selectPeriodLabel.pack( pady=5, padx=5)
 
     def updatePeriod(finisehPeriods):
         initialPeriod = selectPeriodSpinBox.get()
@@ -105,22 +107,22 @@ def mainWindow():
             else:
                 infoPeriodLabel["text"] =  "Voce está de acordo com sua periodização ideal"
         
-        pendingDisciplinesTv = TableView(aba5, False)
+        pendingDisciplinesTv.clear()
         pendingDisciplinesTv.setTableView()
-        pendingDisciplinesTv.grid(row=3, column=0, columnspan=3, pady=5, padx=5)
+        pendingDisciplinesTv.pack( pady=5, padx=5)
 
         for i in pendingDisciplinesList:
             pendingDisciplinesTv.insert("", "end", values=i)
 
 
     selectPeriodSpinBox = Spinbox(aba5, values=periods, width=30, command= lambda:updatePeriod(_finisehPeriods))
-    selectPeriodSpinBox.grid(row=0, column=1, columnspan=3, pady=5, padx=5)
+    selectPeriodSpinBox.pack( pady=5, padx=5)
 
     selectPeriodLabel = Label(aba5, text="", font=25)
-    selectPeriodLabel.grid(row=1, column=0, columnspan=4, pady=5, padx=5)
+    selectPeriodLabel.pack( pady=5, padx=5)
 
     infoPeriodLabel = Label(aba5, text="", font=25)
-    infoPeriodLabel.grid(row=2, column=0, columnspan=4, pady=5, padx=5)
+    infoPeriodLabel.pack( pady=5, padx=5)
 
     f = open("data/grade.txt", encoding="utf8")
     selectedDisciplines = []
@@ -208,7 +210,7 @@ def mainWindow():
         label["text"] += "\n\n Total de créditos: " + str(cred)
 
 
-    # Aba 2   
+    # Aba 2    -----------------------------------------------------------------------------------------------------------------
      
 
     saveButton = Button(aba1, text ="Salvar Disciplinas Selecionadas", command = selecionarDisciplinas)
@@ -217,10 +219,11 @@ def mainWindow():
 
     curriculumTv = TableView(aba1, True)
     curriculumTv.setTableView()
+    curriculumTv["height"] = 20
     curriculumTv.pack()
 
 
-    # Aba 3
+    # Aba 3 -----------------------------------------------------------------------------------------------------------------
 
     takenLabel = Label(aba2, text="Disciplinas Cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenLabel.pack(pady=10)
@@ -300,7 +303,7 @@ def mainWindow():
             lblmsg['text'] = 'Não foi possivel Adicionar'
             lblmsg.pack(pady=10)      
 
-    # Aba 4
+    # Aba 4 -----------------------------------------------------------------------------------------------------------------
 
     lbl_entry2 = Label(aba3,text="Nome do arquivo", bd=2, font=25, borderwidth=2, relief="flat")
     lbl_entry2.pack(pady=10)
@@ -335,10 +338,7 @@ def mainWindow():
 
     lblmsg = Label(aba4,text='', bd=2, font=25, borderwidth=2, relief="flat")
 
-
-
-
-    # Aba 5
+   # Aba 5 -----------------------------------------------------------------------------------------------------------------
 
     pendingLabel = Label(aba4, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
     pendingLabel.pack(pady=10)
@@ -366,9 +366,10 @@ def mainWindow():
         pyplot.show()
 
     GraphicButton = Button(aba5, text="Gerar estatística de conclusão do curso", bd=2, font=25, borderwidth=2, relief="groove", command=generateGraphics)
-    GraphicButton.grid(row=4, column=0, columnspan=10, pady=5, padx=5)
+    GraphicButton.pack( pady=5, padx=5)
 
 
 
 splash_screen.after(3000, mainWindow)
+
 mainloop()
