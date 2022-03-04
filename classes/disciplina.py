@@ -1,7 +1,6 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.worksheet.table import Table
 import pathlib
-from app import mainWindow
 
 class Conexao_Planilha:
 
@@ -11,7 +10,7 @@ class Conexao_Planilha:
 
     
     def CriandoArquivo_Excl():
-        arquivo_excel = pathlib.Path("relatorio.xlsx")
+        arquivo_excel = pathlib.Path("output/relatorio.xlsx")
         if arquivo_excel.exists ():
             pass
         else:
@@ -23,7 +22,7 @@ class Conexao_Planilha:
             sheet["D1"] = "C.H"
             sheet["E1"] = "Período"
 
-            arquivo_excel.save("relatorio.xlsx")
+            arquivo_excel.save("output/relatorio.xlsx")
         
     
 ''' def submitExcell ():

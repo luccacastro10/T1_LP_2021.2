@@ -14,6 +14,7 @@ from classes.TableView import TableView
 import matplotlib.pyplot as pyplot
 from openpyxl.utils import get_column_letter
 
+print("Opening aplication")
 
 status = "Disciplinas Cursadas"
 _finisehPeriods = 0
@@ -244,7 +245,7 @@ def mainWindow():
 
         nome_arquivo = entry2.get()
         entry2.delete(0, END)
-        nome_arquivo = (nome_arquivo + '.xlsx')
+        nome_arquivo = ("output/" + nome_arquivo + '.xlsx')
 
         arquivo_excel = pathlib.Path(nome_arquivo)
 
@@ -274,7 +275,7 @@ def mainWindow():
 
             nome_arquivo = entry2.get()
             entry2.delete(0, END)
-            nome_arquivo = (nome_arquivo + '.xlsx')            
+            nome_arquivo = ("output/" + nome_arquivo + '.xlsx')            
 
             file = load_workbook(nome_arquivo)
             sheet = file.active
@@ -373,3 +374,4 @@ def mainWindow():
 splash_screen.after(3000, mainWindow)
 
 mainloop()
+print("Closing aplication")
