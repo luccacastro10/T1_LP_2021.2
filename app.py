@@ -44,8 +44,8 @@ def mainWindow():
     nb.add(aba1, text="Grade Curricular")
     aba2 = Frame(nb)
     nb.add(aba2, text="Disciplinas Cursadas")
-    aba3 = Frame(nb)
-    nb.add(aba3, text="Disciplinas em Curso")
+    # aba3 = Frame(nb)
+    # nb.add(aba3, text="Disciplinas em Curso")
     aba4 = Frame(nb)
     nb.add(aba4, text="Disciplinas Pendentes")
     aba5 = Frame(nb)
@@ -136,7 +136,7 @@ def mainWindow():
         status = mySpin.get()
         selectLabel["text"] = ("Selecione as " + status)
 
-    mySpin = Spinbox(aba1, values=("Disciplinas Cursadas", "Disciplinas em Curso", "Disciplinas Pendentes"), width=50, relief="groove", command=value_changed)
+    mySpin = Spinbox(aba1, values=("Disciplinas Cursadas", "Disciplinas Pendentes"), width=50, relief="groove", command=value_changed)
     mySpin.pack( padx=5)
 
     selectLabel = Label(aba1, text= ("Selecione as " + status), bd=2, font=25, borderwidth=2, relief="flat")
@@ -163,12 +163,12 @@ def mainWindow():
                 currentTv = pendingTv
                 currentLabel = PendingNumberLabel
                 nb.select(aba4)
-        elif status == "Disciplinas em Curso":
-            currentTv = inCourseTv
-            currentLabel = inCourseNumberLabel
-            for row in inCourseTv.get_children():
-                inCourseTv.delete(row)
-            nb.select(aba3)
+        # elif status == "Disciplinas em Curso":
+        #     currentTv = inCourseTv
+        #     currentLabel = inCourseNumberLabel
+        #     for row in inCourseTv.get_children():
+        #         inCourseTv.delete(row)
+        #     nb.select(aba3)
 
         checkedDisciplines = curriculumTv.get_checked()
 
@@ -235,110 +235,6 @@ def mainWindow():
 
     takenNumberLabel = Label(aba2, text="Você possui " + str(len(takenTv.get_children())) + " Disciplinas em cursadas", bd=2, font=25, borderwidth=2, relief="flat")
     takenNumberLabel.pack(pady=10)
-
-
-    # Funçoes: Aba 4
-    
-    # Função para criar uma planilha excel
-
-    def CriandoArquivo_Excl():
-
-        nome_arquivo = entry2.get()
-        entry2.delete(0, END)
-        nome_arquivo = ("output/" + nome_arquivo + '.xlsx')
-
-        arquivo_excel = pathlib.Path(nome_arquivo)
-
-        if arquivo_excel.exists ():
-            pass
-        else:
-            arquivo_excel = Workbook()
-            sheet = arquivo_excel.active
-
-            lista=[]
-
-            dados = inCourseTv.get_checked()
-            for i in dados:
-                lista.append(inCourseTv.item(i)['values'][1])
-
-
-            sheet.append(lista)
-
-            arquivo_excel.save(nome_arquivo)
-
-    # Função para adicionar dados a planilha
-
-    def submitExcell ():
-        try:
-            entrada = entry.get()
-            entry.delete(0, END)
-
-            nome_arquivo = entry2.get()
-            entry2.delete(0, END)
-            nome_arquivo = ("output/" + nome_arquivo + '.xlsx')            
-
-            file = load_workbook(nome_arquivo)
-            sheet = file.active
-            
-
-            lista=[]
-            completelista=[]
-
-            dados = inCourseTv.get_checked()
-            for i in dados:
-                lista.append(inCourseTv.item(i)['values'][1])
-
-            for i in inCourseTv.get_children():
-                completelista.append(inCourseTv.item(i)['values'][1])
-            
-            x=completelista.index(lista[0])
-
-            sheet.cell(column = x+1,row =sheet.max_row+1, value = entrada)
-
-            file.save(nome_arquivo)   
-
-            lblmsg['text'] = 'Informação Adicionada'
-            lblmsg.pack(pady=10)
-
-        except:
-            lblmsg['text'] = 'Não foi possivel Adicionar'
-            lblmsg.pack(pady=10)      
-
-    # Aba 4 -----------------------------------------------------------------------------------------------------------------
-
-    lbl_entry2 = Label(aba3,text="Nome do arquivo", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_entry2.pack(pady=10)
-    entry2 = Entry(aba3,width=25)
-    entry2.pack(pady=10)
-
-    label1_Btn = Button(aba3,text="Gerar Arquivo Excel", bd=2, font=25, borderwidth=2,command=CriandoArquivo_Excl)
-    label1_Btn.pack(pady=10)
-
-    inCourseLabel = Label(aba3, text="Disciplinas Em Curso", bd=2, font=25, borderwidth=2, relief="flat")
-    inCourseLabel.pack(pady=10)
-
-    inCourseTv = CheckboxTreeview(aba3, columns=("Código", "Disciplina"), show=("headings","tree"))
-    inCourseTv.column("#0", width=45)
-    inCourseTv.column("Código",  width=60, anchor=CENTER, stretch=NO)
-    inCourseTv.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-    inCourseTv.heading("Código",  text="CÓDIGO")
-    inCourseTv.heading("Disciplina", text="DISCIPLINA")
-    inCourseTv.pack()
-
-    inCourseNumberLabel = Label(aba3, text="Você possui " + str(len(inCourseTv.get_children())) + " Disciplinas em Curso", bd=2, font=25, borderwidth=2, relief="flat")
-    inCourseNumberLabel.pack()
-
-
-    lbl_entry = Label(aba3,text="Informação a ser adicionada", bd=2, font=25, borderwidth=2, relief="flat")
-    lbl_entry.pack(pady=10)
-    entry = Entry(aba3,width=25)
-    entry.pack(pady=10)
-
-    label2_Btn = Button(aba3,text="Adicionar ao Arquivo", bd=2, font=25, borderwidth=2,command=submitExcell)
-    label2_Btn.pack()
-
-    lblmsg = Label(aba4,text='', bd=2, font=25, borderwidth=2, relief="flat")
-
    # Aba 5 -----------------------------------------------------------------------------------------------------------------
 
     pendingLabel = Label(aba4, text="Disciplinas Pendentes", bd=2, font=25, borderwidth=2, relief="flat")
