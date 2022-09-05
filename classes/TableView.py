@@ -14,17 +14,17 @@ class TableView(CheckboxTreeview):
     def setTableView(self):
         if(self._isCheckBox):
             self.column("#0", width=45)
-        self.column("Código",  width=60, anchor=CENTER, stretch=NO)
-        self.column("Disciplina",  width=180, anchor=CENTER, stretch=NO)
-        self.column("Créditos",  width=65, anchor=CENTER, stretch=NO)
+        self.column("Código",  width=70, anchor=CENTER, stretch=NO)
+        self.column("Disciplina",  width=220, anchor=CENTER, stretch=NO)
+        self.column("Créditos",  width=78, anchor=CENTER, stretch=NO)
         self.column("C.H",  width=40, anchor=CENTER, stretch=NO)
-        self.column("Período", width=60, anchor=CENTER, stretch=NO)
+        self.column("Período", width=70, anchor=CENTER, stretch=NO)
         self.heading("Código",  text="CÓDIGO")
         self.heading("Disciplina", text="DISCIPLINA")
         self.heading("Créditos",  text="CRÉDITOS")
         self.heading("C.H",  text="C.H")   
         self.heading("Período", text="PERÍODO")
-        self["height"] = 20
+        self["height"] = 25
 
     def clear(self):
         for i in self.get_children():

@@ -20,7 +20,7 @@ MAE125, Álgebra Linear II, 4.0, 60, 3
 COE241, Estatística e Mod. Probabilist, 4.0, 60, 4
 COE350, Sinais e Sistemas, 5.0, 75, 4
 EEE321, Circuitos Eletricos em CC, 4.0, 60, 4
-EEL580, Arquitetura de Computadores, 5.0, 75, 4
+EEL480, Sistemas Digitais, 5.0, 75, 4
 FIM240, Física IV - a, 4.0, 60, 4
 FIN241, Física Experimental IV, 1.0, 30, 4
 COC351, Matemática Computacional, 5.0, 75, 5
